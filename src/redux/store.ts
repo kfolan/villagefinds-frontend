@@ -6,6 +6,8 @@ import guestReducer from '@/redux/reducers/guest';
 import subscriptionReducer from '@/redux/reducers/subscription';
 import productReducer from '@/redux/reducers/product';
 import metricReducer from '@/redux/reducers/metric';
+import imageReducer from '@/redux/reducers/images';
+import businessReducer from '@/redux/reducers/business';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     subscription: subscriptionReducer,
     product: productReducer,
     metric: metricReducer,
+    images: imageReducer,
+    business: businessReducer
   },
 });
 
