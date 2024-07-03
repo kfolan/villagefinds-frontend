@@ -7,7 +7,7 @@ import { MagnifierIcon } from '@/components/icons';
 import { SERVER_URL } from '@/config/global';
 import { SearchbarContext } from '@/providers';
 
-import HeroVideo from '@src/assets/customer/video/hero.mp4';
+import HeroVideo from '/assets/customer/videos/hero.mp4';
 import styles from './DashPage.module.scss';
 
 export interface IDashPageProps {
