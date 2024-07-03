@@ -7,15 +7,6 @@ export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   build: {
     outDir: 'build',
-    rollupOptions: {
-      external: ["react", "react-dom"],
-      output: {
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-        },
-      },
-    },
   },
   server: {
     port: 8000,

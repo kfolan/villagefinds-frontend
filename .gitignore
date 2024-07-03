@@ -27,6 +27,3 @@ dist-ssr
 
 # Environment variables
 *.env
-
-# Video directory
-public/assets/customer/videos
