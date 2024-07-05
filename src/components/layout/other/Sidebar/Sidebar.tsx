@@ -75,7 +75,7 @@ export function Sidebar() {
 
   return (
     <div className={styles.root}>
-      <Logo size="small" />
+      <Logo size="small" />test
       <div className={styles.brand}>
         <Logo size="medium" />
         <p>Sackett River Company</p>
