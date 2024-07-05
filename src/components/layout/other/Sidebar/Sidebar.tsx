@@ -8,7 +8,6 @@ import { customerRoutes, routes } from '@/routes';
 
 import styles from './Sidebar.module.scss';
 import stylesLogo from '@/components/layout/other/Logo/Logo.module.scss';
-import { HttpService } from '@/services';
 import { AuthContext } from '@/providers';
 import { useAppSelector } from '@/redux/store';
 
