@@ -1,12 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
 import { Logo } from '@/components/layout/other';
-
+import { SERVER_URL } from '@/config/global';
 import { customerRoutes, routes } from '@/routes';
 
 import styles from './Sidebar.module.scss';
+import stylesLogo from '@/components/layout/other/Logo/Logo.module.scss';
+import { AuthContext } from '@/providers';
+import { useAppSelector } from '@/redux/store';
+
 
 export interface IRouteItem {
   title: string;
@@ -15,12 +19,33 @@ export interface IRouteItem {
   hide?: boolean;
   children?: IRouteItem[];
 }
+export interface IBusiness {
+  name: string;
+  phone: string;
+  owner: string;
+  address: string;
+  email: string;
+  zipcode: string;
+}
 
+const initialBusiness: IBusiness = {
+  name: '',
+  phone: '',
+  owner: '',
+  address: '',
+  email: '',
+  zipcode: '',
+};
 export function Sidebar() {
+  const businessName = useAppSelector(state => state.business.businessName.name);
+  const imageLogo = useAppSelector(state => state.images.vendorImages.logoUrl);
+
+  const { account, setIsLogin } = useContext(AuthContext);
+  const username = account?.profile?.owner || '';
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
-
+  
   const prefixPath = useMemo(() => {
     return pathname.startsWith('/admin') ? '/admin' : '/vendor';
   }, [pathname]);
@@ -75,10 +100,17 @@ export function Sidebar() {
 
   return (
     <div className={styles.root}>
-      <Logo size="small" />test
+      <Logo size="small" />Test
       <div className={styles.brand}>
-        <Logo size="medium" />
-        <p>Sackett River Company</p>
+        {/* <Logo size="medium" /> */}
+        {(imageLogo) ? (
+          <img
+            alt=""
+            src={`${SERVER_URL}/${imageLogo}`}
+            className={`${styles.imgViewer} ${stylesLogo.mediumLogo}`}
+          />
+        ) :'logo is not uploaded yet'}
+        {(businessName) ? (<p>{businessName}</p>):''}
       </div>
       <div className={styles.navbar}>
         {roleRoutes
@@ -110,3 +142,4 @@ export function Sidebar() {
     </div>
   );
 }
+

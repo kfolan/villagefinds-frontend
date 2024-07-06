@@ -127,7 +127,6 @@ export function Store() {
             <div className={styles.control}>
               <p>
                 Shop Short Description <span>48 Characters</span>
-                {storeInfo.longDesc}
               </p>
               <TextField
                 name="shortDesc"

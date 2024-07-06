@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { SetStateAction, useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Sidebar, Header } from '@/components/layout/other';
@@ -6,7 +6,7 @@ import { HttpService } from '@/services';
 import { AuthContext } from '@/providers';
 import { setupToken } from '@/utils';
 import { useAppDispatch } from '@/redux/store';
-import { loadSubscriptions, loadMetrics } from '@/redux/reducers';
+import { loadSubscriptions, loadMetrics, loadImages, loadBusiness } from '@/redux/reducers';
 
 import styles from './Layout.module.scss';
 
@@ -23,6 +23,25 @@ export function Layout() {
 
   const { isLogin, setIsLogin, setAccount } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+ 
+  
+   interface IBusiness {
+    name: string;
+    phone: string;
+    owner: string;
+    address: string;
+    email: string;
+    zipcode: string;
+  }
+  
+  const initialBusiness: IBusiness = {
+    name: '',
+    phone: '',
+    owner: '',
+    address: '',
+    email: '',
+    zipcode: '',
+  };
 
   useEffect(() => {
     if (blackList.includes(pathname)) return;
@@ -81,7 +100,13 @@ export function Layout() {
     HttpService.get('/settings/general/metric').then(response => {
       dispatch(loadMetrics(response));
     })
-  }, []);
+    HttpService.get('/user/vendor/profile/business').then(response => {
+      dispatch(loadBusiness(response));
+    })
+    HttpService.get('/user/vendor/profile/images').then(response => {
+      dispatch(loadImages(response));
+    })
+    }, []);
 
   return (
     blackList.includes(pathname)
