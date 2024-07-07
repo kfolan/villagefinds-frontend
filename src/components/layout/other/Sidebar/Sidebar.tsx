@@ -100,7 +100,7 @@ export function Sidebar() {
 
   return (
     <div className={styles.root}>
-      <Logo size="small" />Test
+      {/* <Logo size="small" /> */}
       <div className={styles.brand}>
         {/* <Logo size="medium" /> */}
         {(imageLogo) ? (
