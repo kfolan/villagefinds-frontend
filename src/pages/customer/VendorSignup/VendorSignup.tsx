@@ -218,6 +218,14 @@ export function VendorSignup() {
     })
   }, []);
 
+  useEffect(() => {
+    const token = localStorage.getItem(`vendor_token`);
+    if (token) {
+    setupToken(token, "vendor");
+      navigate( '/vendor/dashboard');
+    } 
+  });
+
   return (
     <div className={clsx(styles.root, { [styles.primary]: step > 0 })}>
       {step === 0 ? (
