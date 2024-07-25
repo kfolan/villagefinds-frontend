@@ -58,10 +58,10 @@ export function Signup() {
         .then(response => {
           const { status, token, profile } = response;
           if (status === 200) {
-            enqueueSnackbar('Signup successfully!', { variant: 'success' });
             setIsLogin(true);
             setupToken(token, 'customer');
             setAuthAccount({ role: 'customer', profile });
+            enqueueSnackbar('Signup successfully!', { variant: 'success' });
             navigate('/');
           }
         })
