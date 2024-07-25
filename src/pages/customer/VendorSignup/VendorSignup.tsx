@@ -243,20 +243,20 @@ export function VendorSignup() {
             <RadioGroup
               className={styles.roleList}
               value={roleIndex}
-              updateValue={(index: string) => setRoleIndex(index)}
+              updateValue={(index: string) => setRoleIndex(index+1)}
             >
               {initialRoles.map((role: string, index: number) => (
                 <div
-                  key={index}
+                  key={index+1}
                   className={clsx(styles.role, {
-                    [styles.active]: roleIndex === index.toString(),
+                    [styles.active]: roleIndex === (index+1).toString(),
                   })}
-                  onClick={() => setRoleIndex(index.toString())}
+                  onClick={() => setRoleIndex((index+1).toString())}
                 >
                   <Radio
                     label={role}
                     className={styles.radio}
-                    value={index.toString()}
+                    value={(index+1).toString()}
                   />
                 </div>
               ))}
