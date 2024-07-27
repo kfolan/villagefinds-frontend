@@ -47,7 +47,7 @@ export function Products() {
     if (sortValue !== 'none') params.sort = sortValue;
     if (minPrice) params.minPrice = Number(minPrice);
     if (maxPrice) params.maxPrice = Number(maxPrice);
-    HttpService.get('/products/public', params).then(response => {
+    HttpService.get('/products/subscription', params).then(response => {
       setProducts(response);
     });
   }, [search, type, category, sortValue, minPrice, maxPrice]);
