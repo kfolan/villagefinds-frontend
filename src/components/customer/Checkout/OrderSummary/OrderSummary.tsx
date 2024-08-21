@@ -48,10 +48,11 @@ export function OrderSummary({ summary }: IOrderSummaryProps) {
       <div className={styles.summary}>
         <p className={styles.head}>Order Totals</p>
         <div className={styles.body}>
-          <div className={clsx(styles.row, styles.total)}>
-            <p className={styles.title}>Order Total</p>
-            <p className={styles.text}>{formatText(summary.orderTotal)}</p>
+        <div className={clsx(styles.row, styles.total)}>
+            <p className={styles.title}>Sub Total</p>
+            <p className={styles.text}>{formatText(summary.subTotal)}</p>
           </div>
+         
           <div className={clsx(styles.row, styles.pickup)}>
             <p className={styles.title}>
               Partnered Pickup Location Delivery Fee
@@ -83,9 +84,9 @@ export function OrderSummary({ summary }: IOrderSummaryProps) {
             <p className={styles.title}>Coupon</p>
             <p className={styles.text}>{formatText(summary.giftShippingFee)}</p>
           </div> */}
-          <div className={clsx(styles.row, styles.total)}>
-            <p className={styles.title}>Sub Total</p>
-            <p className={styles.text}>{formatText(summary.subTotal)}</p>
+         <div className={clsx(styles.row, styles.total)}>
+            <p className={styles.title}>Order Total</p>
+            <p className={styles.text}>{formatText(summary.orderTotal)}</p>
           </div>
         </div>
       </div>

@@ -115,13 +115,14 @@ export function MyCart({
   }
 
   const onShippingRatesChange = (id: string) => (rates: any[]) => {
-    console.log(rates);
+    console.log("Shipping Rates Change",rates);
     setCartItems([...cartItems.map(item => item._id === id
       ? ({ ...item, shipping: { ...item.shipping, rates }, deliveryType: 'Shipping' })
       : item)]);
   }
 
   const onShippingServiceChange = (id: string) => (shipping: any) => {
+    console.log("Shipping Service Change",shipping);
     setCartItems(cartItems.map(item => item._id === id
       ? ({ ...item, shipping })
       : item))
