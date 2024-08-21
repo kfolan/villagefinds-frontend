@@ -87,7 +87,7 @@ export function OrderSummary({ summary }: IOrderSummaryProps) {
          <div className={clsx(styles.row, styles.total)}>
             <p className={styles.title}>Order Total</p>
             <p className={styles.text}>{formatText(summary.orderTotal)}</p>
-          </div>
+          </div>Shipping method
         </div>
       </div>
     </div>

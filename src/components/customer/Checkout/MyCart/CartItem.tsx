@@ -97,8 +97,6 @@ export function CartItem({
   onShippingRatesChange: (rates: any[]) => void;
   onShippingServiceChange: (shipping: any) => void;
 }) {
-  console.log('CartItem rerendered', cartId, subscription);
-
   const [isGiftDialog, setIsGiftDialog] = useState(false);
   const [isPickupLocationDialog, setIsPickupLocationDialog] = useState(false);
   const [isDeliveryDateDialog, setIsDeliveryDateDialog] = useState(false);
@@ -106,7 +104,13 @@ export function CartItem({
   const [isShippingDialog, setIsShippingDialog] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const [safePickupDate, setSafePickupDate] = useState(new Date());
-
+  const [shippingDropdown, setShippingDropdown] = useState<any[]>([]);
+  useEffect(() => {
+    if (shipping?.rates && shippingDropdown.length<=0) {
+      setShippingDropdown(shipping?.rates), shipping?.rates
+    }
+   
+ })
   const csaCycle = useMemo(() => {
     if (!subscription?.iscsa) return 0;
     const duration = subscription?.csa.duration || 0;
@@ -314,7 +318,9 @@ export function CartItem({
       .then(response => {
         const { status, rates } = response;
         if (status === 200) {
+          console.log("rates",rates)
           onShippingRatesChange(rates);
+          setShippingDropdown(rates);
           onDeliveryInfoChange({ recipient, delivery });
         }
       });
@@ -583,7 +589,7 @@ export function CartItem({
             <Select
               placeholder='Shipping method'
               value={shipping.serviceLevelToken}
-              options={shipping.rates.map(item => ({
+              options={shippingDropdown?.map(item => ({
                 name: item.name, value: item.serviceLevelToken
               }))}
               updateValue={onShippingMethodChange}
