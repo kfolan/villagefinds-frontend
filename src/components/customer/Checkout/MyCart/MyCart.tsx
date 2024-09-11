@@ -79,7 +79,7 @@ export function MyCart({
   const onPickupLocationChange = (id: string) => ({ location, fulfillday, instruction }: any) => {
     setCartItems(
       cartItems.map(item =>
-        item._id === id
+        item._id === id 
           ? {
             ...item,
             pickuplocation: {
@@ -133,7 +133,7 @@ export function MyCart({
       onNextStep();
     }
   };
-console.log("cart items",cartItems )
+
   return (
     <div className={styles.root}>
       <div className={styles.cart}>

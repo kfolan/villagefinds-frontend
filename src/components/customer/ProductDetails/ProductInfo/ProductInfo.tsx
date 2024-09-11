@@ -1,6 +1,12 @@
 import { useContext, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChevronDown, FaChevronUp, FaMinus, FaPlus, FaStaylinked } from 'react-icons/fa6';
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaMinus,
+  FaPlus,
+  FaStaylinked,
+} from 'react-icons/fa6';
 import { enqueueSnackbar } from 'notistack';
 import clsx from 'clsx';
 
@@ -31,19 +37,19 @@ const frequencyOpts = [
 
 const durationOpts = [
   { name: 'Week', value: 'week' },
-  { name: 'Month', value: 'month' }
+  { name: 'Month', value: 'month' },
 ];
 
 const getFrequencyName = (frequency: string) => {
   const option = frequencyOpts.find(item => item.value === frequency);
   return option?.name || '';
-}
+};
 
 const getFrequencyUnit = (frequency: string) => {
   const values = frequency.split('-');
   const option = durationOpts.find(item => item.value === values[1]);
   return option?.name || '';
-}
+};
 
 export function ProductInfo({
   _id: productId,
@@ -57,7 +63,7 @@ export function ProductInfo({
   customization = { fee: 0, customText: '' },
   subscription,
   soldByUnit,
-  parcel
+  parcel,
 }: IOrderDetail) {
   const navigate = useNavigate();
 
@@ -76,7 +82,9 @@ export function ProductInfo({
   const [customMessage, setCustomMessage] = useState('');
 
   const selectedStyle = useMemo(() => {
-    const variant = variants.find((type: any) => type._id === cartProduct.styleID);
+    const variant = variants.find(
+      (type: any) => type._id === cartProduct.styleID,
+    );
     return variant;
   }, [cartProduct.styleID]);
   const selectedInvent = useMemo(() => {
@@ -88,9 +96,9 @@ export function ProductInfo({
     return (selectedInvent && selectedInvent.price) || price;
   }, [selectedInvent, price]);
   const productDiscount = useMemo(() => {
-    return (subscription?.iscsa)
-      ? (subscription.discount + (selectedStyle?.discount || 0))
-      : (selectedStyle?.discount || 0)
+    return subscription?.iscsa
+      ? subscription.discount + (selectedStyle?.discount || 0)
+      : selectedStyle?.discount || 0;
   }, [selectedStyle, subscription]);
   const productOffPrice = useMemo(() => {
     return (productPrice * (100 - productDiscount)) / 100.0;
@@ -132,7 +140,9 @@ export function ProductInfo({
 
   const onAddCartClick = () => {
     if (!cartProduct.quantity) {
-      return enqueueSnackbar('Select product quantity.', { variant: 'warning' });
+      return enqueueSnackbar('Select product quantity.', {
+        variant: 'warning',
+      });
     }
     if (selectedStyle && !selectedInvent) {
       return enqueueSnackbar('Select attributes.', { variant: 'warning' });
@@ -145,13 +155,14 @@ export function ProductInfo({
       price: productOffPrice,
       quantity: cartProduct.quantity,
       image: productImage,
-      discount: productDiscount
+      discount: productDiscount,
     };
     if (subscription) reqJson.subscription = subscription;
     if (selectedStyle && selectedInvent) {
-      reqJson.attributes =
-        selectedStyle.attributes
-          .map((item, index) => ({ name: item.name, value: attributes[index] }))
+      reqJson.attributes = selectedStyle.attributes.map((item, index) => ({
+        name: item.name,
+        value: attributes[index],
+      }));
       if (selectedInvent.parcel) reqJson.parcel = selectedInvent.parcel;
     } else {
       if (parcel) reqJson.parcel = parcel;
@@ -171,32 +182,57 @@ export function ProductInfo({
     HttpService.post('/cart', reqJson, params).then(response => {
       const { status, cartItem } = response;
       if (status === 200) {
-        setCartItems([...cartItems, cartItem]);
-        enqueueSnackbar('Product added to cart.', { variant: 'success' });
-        navigate('/checkout');
+        const checkOrderId = cartItems.some(
+          oId => oId.orderId === cartItem.orderId,
+        );
+
+        if (checkOrderId) {
+          setCartItems(
+            cartItems.map((item, i) => {
+              if (item.orderId === cartItem.orderId) {
+                return { ...item, quantity: cartItem.quantity };
+              }
+              return item;
+            }),
+          );
+
+          enqueueSnackbar('Product added to cart.', { variant: 'success' });
+          navigate('/checkout');
+        } else {
+          setCartItems([...cartItems, cartItem]);
+          enqueueSnackbar('Product added to cart.', { variant: 'success' });
+          navigate('/checkout');
+        }
       }
-    })
+    });
   };
 
   const onAttributeChange = (index: number) => (value: string) => {
-    const attrResults = attributes.map((item: string, id: number) => id === index ? value : item);
+    const attrResults = attributes.map((item: string, id: number) =>
+      id === index ? value : item,
+    );
     if (attrResults.every(item => !!item)) {
-      const inventory = inventories.find((item: any) =>
-        attrResults.length === item.attrs.length &&
-        item.attrs.every((attribute: string, index: number) => attrResults[index] === attribute)
+      const inventory = inventories.find(
+        (item: any) =>
+          attrResults.length === item.attrs.length &&
+          item.attrs.every(
+            (attribute: string, index: number) =>
+              attrResults[index] === attribute,
+          ),
       );
       if (inventory) setSelectedInventID(inventory._id);
     }
     setAttributes(attrResults);
   };
 
-  const onImageClick = (inventory: { _id: string; styleId: string; attrs: string[]; }) => () => {
-    if (!inventory) return;
+  const onImageClick =
+    (inventory: { _id: string; styleId: string; attrs: string[] }) => () => {
+      if (!inventory) return;
 
-    setAttributes(inventory.attrs);
-    setCartProduct({ ...cartProduct, styleID: inventory.styleId });
-    setSelectedInventID(inventory._id);
-  };
+      setAttributes(inventory.attrs);
+      setCartProduct({ ...cartProduct, styleID: inventory.styleId });
+      setSelectedInventID(inventory._id);
+    };
 
   const onMessageChange = (e: ChangeInputEvent) => {
     if (e.target.value.length > 500) return;
@@ -237,17 +273,14 @@ export function ProductInfo({
                 key={inventory._id}
                 src={`${SERVER_URL}/${inventory.image}`}
                 className={clsx({
-                  [styles.active]:
-                    selectedInventID === inventory._id
+                  [styles.active]: selectedInventID === inventory._id,
                 })}
                 onClick={onImageClick(inventory)}
               />
             ))}
         </div>
         <div className={styles.topicImage}>
-          <img
-            src={`${SERVER_URL}/${productImage}`}
-          />
+          <img src={`${SERVER_URL}/${productImage}`} />
         </div>
         <img />
       </div>
@@ -272,31 +305,37 @@ export function ProductInfo({
           <p className={styles.centPrice}>
             Minimum {1} {soldByUnit} at ${productPrice}/{soldByUnit}
           </p>
-          {variants.length !== 0 && <div className={styles.style}>
-            <Select
-              placeholder="Style"
-              options={[{ _id: '', name: 'None' }, ...variants].map((style: { _id: string; name: string }) => ({
-                ...style,
-                value: style._id,
-              }))}
-              value={cartProduct.styleID}
-              updateValue={onStyleChange}
-              className={styles.styleSelect}
-            />
-            {selectedStyle &&
-              selectedStyle.attributes.map((attribute: any, index: number) => (
-                <Select
-                  className={styles.styleSelect}
-                  placeholder={attribute.name}
-                  options={attribute.values}
-                  value={attributes[index]}
-                  updateValue={onAttributeChange(index)}
-                />
-              ))}
-          </div>}
+          {variants.length !== 0 && (
+            <div className={styles.style}>
+              <Select
+                placeholder="Style"
+                options={[{ _id: '', name: 'None' }, ...variants].map(
+                  (style: { _id: string; name: string }) => ({
+                    ...style,
+                    value: style._id,
+                  }),
+                )}
+                value={cartProduct.styleID}
+                updateValue={onStyleChange}
+                className={styles.styleSelect}
+              />
+              {selectedStyle &&
+                selectedStyle.attributes.map(
+                  (attribute: any, index: number) => (
+                    <Select
+                      className={styles.styleSelect}
+                      placeholder={attribute.name}
+                      options={attribute.values}
+                      value={attributes[index]}
+                      updateValue={onAttributeChange(index)}
+                    />
+                  ),
+                )}
+            </div>
+          )}
         </div>
-        {
-          customization && customization.customText && <>
+        {customization && customization.customText && (
+          <>
             <div className={styles.personalization}>
               <div
                 className={styles.dropdown}
@@ -310,43 +349,46 @@ export function ProductInfo({
                 )}
               </div>
               <p>
-                Personalization Fee: <span>${customization.fee.toFixed(2)}</span>
+                Personalization Fee:{' '}
+                <span>${customization.fee.toFixed(2)}</span>
               </p>
             </div>
-            {isPersonalized && <div className={styles.message}>
-              <div className={styles.example}>
-                <p>{customization.customText}</p>
-              </div>
-              <div className={styles.msgInput}>
-                <TextField
-                  rows={4}
-                  placeholder="Type here"
-                  value={customMessage}
-                  updateValue={onMessageChange}
-                  className={
-                    customMessage.length === 500 ? styles.dangerMessage : ''
-                  }
-                />
-                <div
-                  className={clsx(styles.alerts, {
-                    [styles.warning]: customMessage.length === 500,
-                  })}
-                >
-                  <span
-                    className={clsx(styles.invalidLength, {
-                      hidden: customMessage.length !== 500,
+            {isPersonalized && (
+              <div className={styles.message}>
+                <div className={styles.example}>
+                  <p>{customization.customText}</p>
+                </div>
+                <div className={styles.msgInput}>
+                  <TextField
+                    rows={4}
+                    placeholder="Type here"
+                    value={customMessage}
+                    updateValue={onMessageChange}
+                    className={
+                      customMessage.length === 500 ? styles.dangerMessage : ''
+                    }
+                  />
+                  <div
+                    className={clsx(styles.alerts, {
+                      [styles.warning]: customMessage.length === 500,
                     })}
                   >
-                    The message must be a maximum of 500 characters.
-                  </span>
-                  <span className={styles.letterLength}>
-                    {500 - customMessage.length}
-                  </span>
+                    <span
+                      className={clsx(styles.invalidLength, {
+                        hidden: customMessage.length !== 500,
+                      })}
+                    >
+                      The message must be a maximum of 500 characters.
+                    </span>
+                    <span className={styles.letterLength}>
+                      {500 - customMessage.length}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>}
+            )}
           </>
-        }
+        )}
         <div className={styles.logo}>
           <p>Add your logo or image here</p>
           <ImageUpload
@@ -374,16 +416,18 @@ export function ProductInfo({
               Fulfillment Day: <span>Determined at checkout</span>
             </p>
             <p className={clsx(styles.factor, styles.concern)}>
-              Subscription Duration: <span>{`${subscription.csa?.duration} ${getFrequencyUnit(subscription.csa?.frequency || '')}${subscription.csa?.duration === 1 ? '' : 's'}`}</span>
+              Subscription Duration:{' '}
+              <span>{`${subscription.csa?.duration} ${getFrequencyUnit(
+                subscription.csa?.frequency || '',
+              )}${subscription.csa?.duration === 1 ? '' : 's'}`}</span>
             </p>
             <p className={clsx(styles.factor, styles.concern)}>
-              Subscription Frequency: <span>{getFrequencyName(subscription.csa?.frequency || '')}</span>
+              Subscription Frequency:{' '}
+              <span>{getFrequencyName(subscription.csa?.frequency || '')}</span>
             </p>
             <p className={styles.hint}>
               <span>Your card will be charged </span>$
-              {productOffPrice *
-                cartProduct.quantity *
-                csaCycle}{' '}
+              {productOffPrice * cartProduct.quantity * csaCycle}{' '}
               {subscription?.csa?.duration
                 ? `every ${subscription.csa.duration} weeks`
                 : 'every week'}{' '}

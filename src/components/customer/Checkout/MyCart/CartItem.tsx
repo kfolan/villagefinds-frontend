@@ -106,10 +106,9 @@ export function CartItem({
   const [safePickupDate, setSafePickupDate] = useState(new Date());
   const [shippingDropdown, setShippingDropdown] = useState<any[]>([]);
   useEffect(() => {
-    if (shipping?.rates && shippingDropdown.length<=0) {
+    if (shipping?.rates && shippingDropdown.length>=0) {
       setShippingDropdown(shipping?.rates), shipping?.rates
     }
-   
  })
   const csaCycle = useMemo(() => {
     if (!subscription?.iscsa) return 0;
@@ -318,7 +317,6 @@ export function CartItem({
       .then(response => {
         const { status, rates } = response;
         if (status === 200) {
-          console.log("rates",rates)
           onShippingRatesChange(rates);
           setShippingDropdown(rates);
           onDeliveryInfoChange({ recipient, delivery });
@@ -411,7 +409,7 @@ export function CartItem({
         <div className={styles.vendor}>
           <img src={`${SERVER_URL}/${vendor.images?.logoUrl}`} />
           <div className={styles.order}>
-            <p className={styles.name}>{vendor.business.name}</p>
+            <p className={styles.name}>{vendor.business?.name}</p>
             <p className={styles.orderId}>
               Order ID: <span>{orderID}</span>
             </p>

@@ -247,6 +247,7 @@ export function CartProvider({ children }: ICartProviderProps) {
     }
     HttpService.get('/cart', params).then(response => {
       const { status } = response;
+     
       if (!status) {
         setCartItems(response || []);
       }
@@ -309,7 +310,7 @@ export function CartProvider({ children }: ICartProviderProps) {
     //   if (status === 200) { }
     // });
   }, [cartItems]);
-
+  
   return (
     <CartContext.Provider
       value={{ addressList, cartItems, cartItemCount, summary, setCartItems, setAddressList }}
