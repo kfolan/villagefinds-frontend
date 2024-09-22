@@ -19,7 +19,6 @@ export function Radio({
   className = '',
 }: IRadio) {
   const context = useContext(RadioContext);
-  console.log(context.multiple);
 
   return (
     <div

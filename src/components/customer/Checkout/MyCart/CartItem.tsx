@@ -106,10 +106,10 @@ export function CartItem({
   const [safePickupDate, setSafePickupDate] = useState(new Date());
   const [shippingDropdown, setShippingDropdown] = useState<any[]>([]);
   useEffect(() => {
-    if (shipping?.rates && shippingDropdown.length>=0) {
-      setShippingDropdown(shipping?.rates), shipping?.rates
+    if (shipping?.rates && shippingDropdown.length <= 0) {
+      setShippingDropdown(shipping?.rates)
     }
- })
+ },[shipping?.rates])
   const csaCycle = useMemo(() => {
     if (!subscription?.iscsa) return 0;
     const duration = subscription?.csa.duration || 0;
@@ -319,6 +319,7 @@ export function CartItem({
         if (status === 200) {
           onShippingRatesChange(rates);
           setShippingDropdown(rates);
+          shipping.rates = rates
           onDeliveryInfoChange({ recipient, delivery });
         }
       });

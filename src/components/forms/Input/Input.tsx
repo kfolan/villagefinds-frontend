@@ -128,7 +128,7 @@ export const Input = forwardRef((props: IInputProps, ref: any) => {
 
   useEffect(() => {
     if (type === 'file') {
-      console.log('File input updated.');
+     // console.log('File input updated.');
     }
   }, [value, type]);
 

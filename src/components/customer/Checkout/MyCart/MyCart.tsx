@@ -74,6 +74,7 @@ export function MyCart({
           );
         }
       });
+
   };
 
   const onPickupLocationChange = (id: string) => ({ location, fulfillday, instruction }: any) => {
@@ -118,9 +119,13 @@ export function MyCart({
     setCartItems([...cartItems.map(item => item._id === id
       ? ({ ...item, shipping: { ...item.shipping, rates }, deliveryType: 'Shipping' })
       : item)]);
+      // setCartItems(cartItems.map(item => item._id === id
+      //   ? ({ ...item, shipping: { ...item.shipping, rates }, deliveryType: 'Shipping' })
+      //   : item));
   }
 
   const onShippingServiceChange = (id: string) => (shipping: any) => {
+    
     setCartItems(cartItems.map(item => item._id === id
       ? ({ ...item, shipping })
       : item))

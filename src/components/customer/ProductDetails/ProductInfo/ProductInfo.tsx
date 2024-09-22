@@ -177,8 +177,6 @@ export function ProductInfo({
       params.buyerID = guestID;
     }
 
-    console.log('Request Json', reqJson);
-
     HttpService.post('/cart', reqJson, params).then(response => {
       const { status, cartItem } = response;
       if (status === 200) {
