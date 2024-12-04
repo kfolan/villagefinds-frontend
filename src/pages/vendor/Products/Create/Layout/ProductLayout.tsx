@@ -59,8 +59,10 @@ export function ProductLayout() {
 
   const product = useAppSelector(state => state.product);
   const { nutrition, image } = useContext(ProductContext);
+  console.log("submitted product image", image)
+  console.log("submitted product image provider",  useContext(ProductContext))
+  console.log("product", product)
   const { styleImages } = useContext(ProductContext);
-
   const [subPath, subActionPath] = useMemo(() => {
     const trimPath = pathname.slice(PRODUCT_PATH.length);
     const segPaths = trimPath.split('/');
@@ -89,7 +91,9 @@ export function ProductLayout() {
   };
 
   const submitProduct = () => {
-    console.log('Style Images', styleImages);
+    console.log('Style Images Submit', image);
+    console.log(styleImages.length);
+
     const reqJson: any = {
       ...product, ...product.general
     };
@@ -97,14 +101,21 @@ export function ProductLayout() {
     delete reqJson.general;
     HttpService.post('/products', reqJson).then(response => {
       const { status, product, styleInvents } = response;
+      console.log("product",product);
       if (status === 200) {
         const formData = new FormData();
         if (nutrition) formData.append('nutrition', nutrition);
+        //if (image) formData.append('image', image);
         if (image) formData.append('image', image);
+        console.log("formData Image 1",formData);
+        console.log("formData Image 2", image);
+        for (var key of formData.entries()) {
+          console.log(key[0] + ', ' + key[1])
+        }
         HttpService.put(`/products/${product}`, formData).then(response => {
           const { status } = response;
+          console.log("response product formData",formData, status);
         });
-
         Promise.all(styleInvents.map((style: { styleID: string; inventories: string[]; }, styleID: number) => {
           const images = styleImages[styleID].images;
           const formData = new FormData();
@@ -115,6 +126,7 @@ export function ProductLayout() {
               inventIDs.push(styleInvents[styleID].inventories[imageID]);
             }
           });
+        
           formData.append('inventIDs', JSON.stringify(inventIDs));
           HttpService.put('/inventories/image', formData, { styleId: style.styleID }).then(response => {
             const { status } = response;
@@ -126,6 +138,7 @@ export function ProductLayout() {
           enqueueSnackbar('Product uploaded.', { variant: 'success' });
           dispatch(resetProduct());
           navigate(PRODUCT_PATH);
+          console.log("response product",response);
         });
       }
     })

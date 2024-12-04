@@ -135,7 +135,7 @@ export function Products() {
       setProducts(response);
     });
   }, [nameFilter, idFilter, skuFilter, sortBy]);
-
+console.log(products);
   return (
     <Card title="My Products" className={styles.root}>
       <div className={styles.container}>

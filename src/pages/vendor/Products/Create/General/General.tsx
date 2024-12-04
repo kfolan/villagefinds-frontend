@@ -23,6 +23,7 @@ import { HttpService } from '@/services';
 import { ChangeInputEvent } from '@/interfaces';
 
 import styles from './General.module.scss';
+import { SERVER_URL } from '@/config/global';
 
 type PayType = 'Shipping' | 'Near By' | 'Local Subscriptions';
 type TopicType =
@@ -94,6 +95,8 @@ export function General() {
   const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
     setImage(e.target.files[0] as File);
+    
+    console.log(image, "onImageChange")
   };
 
   const onDeliveryTypeChange = (value: string) => {
@@ -130,6 +133,8 @@ export function General() {
 
   const onSubmitClick = () => {
     if (productId === 'create') {
+      console.log("generalInfo",generalInfo)
+      console.log("submit image",image)
       dispatch(updateGeneral(generalInfo));
       navigate(NEXT_PATH);
     } else {
@@ -356,6 +361,15 @@ export function General() {
                 value={image}
                 updateValue={onImageChange}
               />
+              {image && image.name}
+              
+              {image && (
+                <div><img
+                  src={URL.createObjectURL(image)}
+                  alt="Thumb" className='w-[5rem]' height={'auto'} width={'auto'}
+                   style={{objectFit:'contain'}}
+                />
+                </div>)}
             </div>
             <div className={styles.control}>
               <p>Sold By Units</p>

@@ -60,7 +60,7 @@ export function Products() {
     if (type) setType(type);
     if (category) setCategory(category);
   }, [searchParams]);
-
+  console.log("products",products)
   return (
     <Container className={styles.root}>
       <div className={styles.toolbar}>

@@ -65,6 +65,7 @@ export function ProductInfo({
   soldByUnit,
   parcel,
 }: IOrderDetail) {
+  console.log("sssssss",productId)
   const navigate = useNavigate();
 
   const { isLogin, account } = useContext(AuthContext);
@@ -124,7 +125,6 @@ export function ProductInfo({
   };
 
   const onStyleChange = (id: string) => {
-    console.log(id);
     const style = variants.find(item => item._id === id);
     setCartProduct({ ...cartProduct, styleID: id });
     setAttributes(Array(style?.attributes.length).fill(''));

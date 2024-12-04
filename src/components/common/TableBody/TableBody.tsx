@@ -31,6 +31,7 @@ export function TableBody({
   setRows = () => { },
   onRowMove = () => { },
 }: ITableBodyProps) {
+  console.log("rowsrowsrows", rows);
   const moveItem = (dragIndex: number, hoverIndex: number): void => {
     if (!selectable) return;
     const dragItem = rows[dragIndex];
@@ -40,7 +41,6 @@ export function TableBody({
     setRows(newItems);
     onRowMove(newItems.map(item => item._id));
   };
-
   return (
     <div className={clsx(styles.root, className)}>
       <div className={styles.header}>

@@ -116,14 +116,17 @@ export function ProductDetails() {
   const { id: productId } = useParams();
 
   const [moreDetail, setMoreDetail] = useState<IMoreDetail>(initialMoreDetail);
+  
   const [orderDetail, setOrderDetail] =
     useState<IOrderDetail>(initialOrderDetail);
 
   useEffect(() => {
     HttpService.get(`/products/customer/${productId}`).then(response => {
+      console.log("AAAA",productId)
       const { status, product } = response;
       if (status === 200) {
         const { more, order } = product;
+      
         setMoreDetail(more);
         setOrderDetail(order);
       }

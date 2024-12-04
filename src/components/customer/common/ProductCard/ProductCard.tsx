@@ -43,7 +43,7 @@ export function ProductCard({
 }: IProductCardProps) {
   const navigate = useNavigate();
   const { _id, image, name, shopName, price, totprice, tags } = product;
-
+console.log("imagesss",image)
   return isLoadMore ? <div className={clsx(styles.root, styles.active)} onClick={() => navigate('/market')}>
     <p className={styles.moreContext}>
       Load More
