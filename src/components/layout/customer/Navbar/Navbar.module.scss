@@ -14,7 +14,7 @@
         }
       }
       li.active {
-        @apply after:h-0.5;
+        @apply after:h-0.5 font-bold;
       }
       li.emphasize {
         @apply text-light;
